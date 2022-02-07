@@ -1,0 +1,32 @@
+这是vue3搭建的项目
+
+----element-plus
+指定安装@1.2.0-beta.6（2021.12.13时的最新版本）。
+  安装图标包，npm install @element-plus/icons-vue（原先@element-plus/icons，现已废弃）。
+在vite中只用 2.3.7能使用icon
+npm install @element-plus/icons-vue
+
+
+----router
+import { createRouter, createWebHashHistory } from 'vue-router'
+const Router = createRouter({
+    routes:[]
+})
+export default Router
+
+
+----store 安装4.0以上vuex
+import {createStore} from 'vuex'
+export default createStore({
+    state:{}
+})
+
+----vue3 keep-alive
+  <router-view v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component"  v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <component :is="Component"  v-if="!$route.meta.keepAlive"/>
+  </router-view> 
+
+

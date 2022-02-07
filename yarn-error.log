@@ -1,0 +1,53 @@
+Arguments: 
+  D:\学习\NOdejs\node.exe D:\nodejs\node_global\node_modules\yarn\bin\yarn.js add vue3-lazy -S
+
+PATH: 
+  C:\Program Files (x86)\Razer\ChromaBroadcast\bin;C:\Program Files\Razer\ChromaBroadcast\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Java\jdk-13.0.2\bin;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\18571513020\AppData\Local\Microsoft\WindowsApps;C:\mingw64\bin;D:\学习\Microsoft VS Code\bin;\学习\NOdejs\;\Program Files\nodejs\node_global;D:\学习\Git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\学习\NOdejs\;D:\学习\gcc\x86_64-8.1.0-release-posix-sjlj-rt_v6-rev0\mingw64\bin;D:\mongoDB\mongodb\bin;D:\nodejs\node_global;D:\new_mysql\mysql-5.7.24-winx64\bin;;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\18571513020\AppData\Local\Microsoft\WindowsApps;C:\mingw64\bin;D:\学习\Microsoft VS Code\bin;D:\学习\NOdejs\node-global;C:\Users\18571513020\AppData\Local\GitHubDesktop\bin;C:\Users\18571513020\AppData\Roaming\npm
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  15.9.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'D:\前端\vue\music\WYY_Music\node_modules\esbuild-windows-64\esbuild.exe'
+
+npm manifest: 
+  {
+    "name": "vite-project",
+    "version": "0.0.0",
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "serve": "vite preview",
+      "start": "vite --port 8000"
+    },
+    "dependencies": {
+      "@element-plus/icons": "^0.0.11",
+      "@element-plus/icons-vue": "^0.2.4",
+      "axios": "^0.24.0",
+      "element-plus": "^1.2.0-beta.6",
+      "js-cookie": "^3.0.1",
+      "less": "^3.9.0",
+      "less-loader": "^4.1.0",
+      "vue": "^3.2.4",
+      "vue-aplayer": "^1.6.1",
+      "vue-router": "^4.0.12",
+      "vuex": "^4.0.2",
+      "vuex-persistedstate": "^4.1.0"
+    },
+    "devDependencies": {
+      "@vitejs/plugin-vue": "^1.9.3",
+      "vite": "^2.3.7"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

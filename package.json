@@ -1,0 +1,29 @@
+{
+  "name": "vite-project",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite --port 8000"
+  },
+  "dependencies": {
+    "@element-plus/icons": "^0.0.11",
+    "@element-plus/icons-vue": "^0.2.4",
+    "axios": "^0.24.0",
+    "element-plus": "^1.2.0-beta.6",
+    "js-cookie": "^3.0.1",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "vue": "^3.2.4",
+    "vue-aplayer": "^1.6.1",
+    "vue-router": "^4.0.12",
+    "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.15",
+    "@vitejs/plugin-vue": "^1.9.3",
+    "vite": "^2.3.7"
+  }
+}
