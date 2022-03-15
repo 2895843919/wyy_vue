@@ -15,7 +15,7 @@
             <span class="headLine">热门推荐</span>
           </div>
           <div class="hotRecommend_list">
-            <ul v-for="item in weekData" :key="item.id">
+            <ul v-for="item in totalData.slice(20,30)" :key="item.id">
               <li>
                 <div class="list_li">
                   <img
@@ -154,7 +154,7 @@ export default {
     };
   },
   async created() {
-    window.scrollTo(0,0)
+    window.scrollTo(0, 0);
     await this.Top_album();
     await this.Album_new();
   },
@@ -162,9 +162,7 @@ export default {
     //新碟上架
     Top_album() {
       top_album().then((res) => {
-        console.log("top");
         this.weekData = res;
-        console.log(res);
         this.weekData.forEach((item) => {
           item.picUrl = item.picUrl + "?param=130y130";
         });
@@ -190,12 +188,12 @@ export default {
           offset: 100,
         }).then((res) => {
           i += 100;
-                  this.page.tableData = this.page.tableData.concat(res.albums);
-                  this.page.tableData.forEach(item=>{
-              item.picUrl=item.picUrl+"?param=130y130"
-                  })
+          this.page.tableData = this.page.tableData.concat(res.albums);
+          this.page.tableData.forEach((item) => {
+            item.picUrl = item.picUrl + "?param=130y130";
+          });
         });
-        console.log(i);
+        // console.log(i);
         if (i >= 300) {
           clearInterval(time1);
         }
@@ -204,9 +202,7 @@ export default {
 
     // 跳转对应专辑页面
     go_playlist(id) {
-      console.log(id);
       this.$router.push({
-        // name:'album_item',
         path: "/album_item",
         query: {
           id: id,
@@ -223,7 +219,7 @@ export default {
         this.page.pre,
         this.page.pre + 20
       );
-      console.log(val, this.page.currentPage);
+      // console.log(val, this.page.currentPage);
       // if (this.page.currentPage >= this.page.tableData.length / 20) {
       //   let page = Math.ceil(this.page.currentPage / 5);
       //   // for 循环解决el-pagination 的逆向数组添加/解决只能顺序点击page触发的concat，通过页码判断执行几次接口请求，添加几次数组
@@ -250,7 +246,6 @@ export default {
       //   }
       // }
     },
-    //
   },
 };
 </script>

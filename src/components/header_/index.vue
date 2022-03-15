@@ -24,7 +24,7 @@
                   我的音乐</router-link
                 >
               </li>
-                <!-- <li>
+              <!-- <li>
                 <router-link class="router_link" to="/my" active-class="active">
                   排行榜</router-link
                 >
@@ -37,10 +37,10 @@
           <div class="search">
             <el-input
               class="el_input"
-              placeholder="请输入内容"            
+              placeholder="请输入内容"
               v-model="input"
-              maxlength='250px'            
-               @keyup.enter="go_search"
+              maxlength="250px"
+              @keyup.enter="go_search"
             >
               <template #prefix>
                 <el-icon class="el_input_icon"> <search /> </el-icon>
@@ -57,9 +57,7 @@
                 </el-avatar>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="Logout()"
-                      >退出</el-dropdown-item
-                    >
+                    <el-dropdown-item @click="Logout()">退出</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -79,7 +77,10 @@
             >
           </li>
           <li>
-            <router-link class="router_link" :to="{name:'playlist_all',query:{cat:'全部'}}" >
+            <router-link
+              class="router_link"
+              :to="{ name: 'playlist_all', query: { cat: '全部' } }"
+            >
               歌单</router-link
             >
           </li>
@@ -108,97 +109,128 @@
 
       <div v-else></div>
     </div>
- 
+
+    <login-box
+      @EditClose="EditClose"
+      ref="loginBox"
+      v-show="loginFlag"
+    ></login-box>
   </div>
-
-
-
 </template>
 
 <script>
 import { mapState } from "vuex";
-// import { Search } from "@element-plus/icons";
-  import { Search } from '@element-plus/icons-vue'
-import { login ,logout,status,account,login_refresh,user_level} from "../../utils/request.js"; //登录函数
 
+import { Search } from "@element-plus/icons-vue";
+import {
+  login,
+  logout,
+  status,
+  account,
+  login_refresh,
+  user_level,
+} from "../../utils/request.js"; //登录函数
+import loginBox from "../../views/loginBox/loginBox.vue";
 
 export default {
   data() {
     return {
-      input: "",   
-      cookie:'' 
+      input: "",
+      cookie: "",
+      loginFlag: false,
     };
   },
   components: {
     Search,
+    loginBox,
   },
   computed: {
     ...mapState(["login_data"], ["login_cookie"]),
   },
   mounted() {
+    // console.log(this.$refs.loginBox.flag);
   },
-  created(){
-  },
+  created() {},
   methods: {
     // 登录
     Login() {
-      login({ phone: "18571513020", password: "20011012.." })
+      this.loginFlag = true;
+      // login({ phone: "18571513020", password: "20011012.." })
+      //   .then((res) => {
+      //     this.$store.commit("saveDate", res);
+      //     this.$store.commit("saveCookie", res.cookie);
+      //     this.$store.commit("saveImg", res.profile.avatarUrl);
+      //     this.$store.commit("saveAccountId", res.account.id);
+      //     this.Account()
+      //     this.User_level()
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    },
+    EditClose(v) {
+      this.loginFlag = v;
+      // console.log(v);
+    },
+
+    // 退出登录
+    Logout() {
+      logout();
+      this.$store.commit("saveDate", "");
+      this.$store.commit("saveCookie", "");
+      this.$store.commit("saveAccountId", "");
+      this.$store.commit("saveImg", "");
+      this.$store.commit("saveLever", "");
+      this.$store.commit("saveNickName", "");
+
+ElMessage({
+  message: '退出登录',
+  type: 'info'
+})
+  //      ElNotification({
+  //   title: 'Title',
+  //   message: h('i', { style: 'color: teal' }, '退出登录'),
+  // })
+
+
+    },
+    // 获取账号信息
+    Account() {
+      account({ cookie: this.$store.state.login_cookie })
         .then((res) => {
-          // console.log(res);
-          this.$store.commit("saveDate", res);
-          this.$store.commit("saveCookie", res.cookie);
-          this.$store.commit("saveImg", res.profile.avatarUrl);
-          this.$store.commit("saveAccountId", res.account.id);
-          this.Account()
-          this.User_level()
+          this.$store.commit("saveNickName", res.profile.nickname);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    // 获取
-    
-// 退出登录
-    Logout(){
-      logout()
-      this.$store.commit("saveDate", "");
-      this.$store.commit("saveCookie", "");
-      this.$store.commit("saveAccountId", '');  
-      this.$store.commit("saveImg", '');   
-      this.$store.commit('saveLever','')
-      this.$store.commit('saveNickName','')
-    },
-    // 获取账号信息
-    Account(){ 
-      account({ cookie:this.$store.state.login_cookie})
-      .then(res=>{
-        this.$store.commit('saveNickName',res.profile.nickname)
-      })
-      .catch(err=>{console.log(err);})
-    },
-    User_level(){
-      user_level({ cookie:this.$store.state.login_cookie}).then(res=>{
-        this.$store.commit('saveLever',res.data.level)
-      })
+    User_level() {
+      user_level({ cookie: this.$store.state.login_cookie }).then((res) => {
+        this.$store.commit("saveLever", res.data.level);
+      });
     },
 
     //刷新登录
-    Login_refresh(){
-      login_refresh().then(res=>{
-        console.log(res);
-      })
+    Login_refresh() {
+      login_refresh().then((res) => {
+        // console.log(res);
+      });
     },
-    go_search(){
+    go_search() {
       this.$router.push({
-        path:'/search',
-        query:{
-          s:this.input
-        }
-      })   
-       }
-
+        path: "/search",
+        query: {
+          s: this.input,
+        },
+      });
+    },
   },
 
+  watch: {
+    "$refs.loginBox.flag"(newv, oldv) {
+      console.log(newv, oldv);
+    },
+  },
 };
 </script>
 
@@ -349,5 +381,12 @@ export default {
 }
 .el-icon-arrow-down {
   font-size: 12px;
+}
+
+.login-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  // z-index:1000;
 }
 </style>

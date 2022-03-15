@@ -22,16 +22,16 @@
           <img
             style="width: 35px; height: 35px; cursor: pointer"
             ref="play_pause"
-            @click="play_pause()"
-            v-if="flag"
+            @click="play_audio()"
+            v-show="flag"
             src="../../static/imgs/播放_bottom.png"
             alt=""
           />
           <img
             style="width: 35px; height: 35px; cursor: pointer"
             ref="play_pause"
-            @click="play_pause()"
-            v-else
+            @click="pause_audio()"
+            v-show="!flag"
             src="../../static/imgs/暂停.png"
             alt=""
           />
@@ -199,12 +199,12 @@
                     "
                   >
                     <img
-                      style="width: 30px; height: 30px"
-                      src="../../static/imgs/播放.png"
+                      style="width: 40px; height: 40px"
+                      src="@/static/imgs/播放.png"
                       alt=""
                       @click="Song_detail(item.id, index)"
                     />
-                    <!-- <img style="width:25px;height:25px" src="../../static/imgs/播放.png" alt="">         -->
+                   
                   </div>
                 </div>
                 <!-- 如果没有hover -->
@@ -235,6 +235,7 @@
 </template>
 
 <script>
+
 import { song_url, song_detail, dt_data } from "../../utils/request.js";
 export default {
   data() {
@@ -272,17 +273,16 @@ export default {
       (this.$store.state.song_time / 1000 / 100) * 1000
     );
     this.audio.currentTime = 0;
+    // console.log(sessionStorage.getItem('audio_oldv'));
   },
   mounted() {    
     this.audio.src = sessionStorage.getItem('audio_oldv')
-    console.log(this.audio.src);
     this.slider = this.$refs.slider;
     this.now_index = this.$store.state.now_index;
   },
   methods: {
     Song_url(id) {
       song_url(id).then((res) => {
-        console.log(res);
       });
     },
     //   点击播放与暂停
@@ -300,6 +300,50 @@ export default {
       //如果是暂停状态触发
       if (!this.flag) {
         this.audio.play();
+        this.audio.volume = this.value1 / 100;
+
+        this.time2 = setInterval(() => {
+          this.value += this.step;
+        }, this.timeout);
+
+        this.time = setInterval(() => {
+          this.currentTime += this.step;
+          // 当播放时间介绍调用当前函数
+          if (
+            Math.floor(this.currentTime) + 1 >
+            Math.floor(this.$store.state.song_time / 1000)
+          ) {
+
+            clearInterval(this.time);
+            clearInterval(this.time2);
+
+            this.audio.src = this.$store.state.song_url;
+            this.currentTime = 0;
+            this.flag = true;
+            this.value = 0;
+            this.audio.currentTime = 0;
+            this.play_pause();
+          }
+        }, 1000);
+      } else {
+        // 播放状态点击触发
+        this.step = 0;
+        this.audio.pause();
+      }
+    },
+
+    // 播放
+    play_audio(){
+       this.flag = !this.flag;
+      this.flag=false
+      this.step = 1;
+      //清除定时器
+      clearInterval(this.time);
+      clearInterval(this.time2);
+      this.songs_list = this.$store.state.song_list;
+      this.song_list_copy = JSON.parse(JSON.stringify(this.songs_list));
+
+       this.audio.play();
         this.audio.volume = this.value1 / 100;
         this.time2 = setInterval(() => {
           this.value += this.step;
@@ -324,11 +368,12 @@ export default {
             this.play_pause();
           }
         }, 1000);
-      } else {
-        // 播放状态点击触发
-        this.step = 0;
-        this.audio.pause();
-      }
+    },
+    //暂停
+    pause_audio(){
+      this.flag=true
+      this.step = 0;
+      this.audio.pause();
     },
     // 改变slider 同时改变audio的currentTime
     change_slider() {
@@ -336,7 +381,7 @@ export default {
         (Math.floor(this.$store.state.song_time / 1000) / 100) * this.value; // currentTime = 当前slider value
       this.currentTime =
         (this.$store.state.song_time / 1000 / 100) * this.value;
-      console.log(this.currentTime);
+      // console.log(this.currentTime);
     },
     // 显示volumn slider
     c_volumn() {
@@ -345,7 +390,6 @@ export default {
     //改变value后对音乐音量做出修改
     changed_volumn() {
       this.audio.volume = this.value1 / 100;
-      console.log(this.value1);
     },
     //上一曲
     preSong() {},
@@ -359,11 +403,11 @@ export default {
         this.$store.commit("saveSong_url", r.data[0].url);
         //在获取url之后获取歌曲信息，避免watch url时出现time先执行导致audio报错
       });
-      setTimeout(() => {
+      // setTimeout(() => {
         // 在el-drawer 中改变now_index
         this.$store.commit("saveNow_index", index);
         song_detail({ ids: i }).then((res) => {
-          // console.log(res);
+          console.log(res);
           this.$store.commit("saveSong_img", res.songs[0].al.picUrl);
           this.$store.commit("saveSong_name", res.songs[0].name);
           this.$store.commit("saveSong_singer", res.songs[0].ar[0].name);
@@ -372,7 +416,7 @@ export default {
 
           // 获取歌曲url
         });
-      }, 0);
+      // }, 0);
     },
     //格式化时间
     dt_data(t) {
@@ -387,7 +431,6 @@ export default {
     },
     mouseenter(index) {
       this.song_index = index;
-      // this.now_index=index
     },
     mouseleave() {
       this.song_index = null;
@@ -396,23 +439,21 @@ export default {
 
   watch: {
     //对audio_url监听
-    "$store.state.song_url"(newv, oldv) {
+    "$store.state.song_url"(newv, oldv) {    
       this.currentTime = 0;
       this.flag = true;
       this.value = 0;
-      this.audio.src = newv;
-     
-      sessionStorage.setItem('audio_oldv',oldv)
+      this.audio.src = newv;     
+      sessionStorage.setItem('audio_oldv',newv)
 
-       this.audio_oldv = sessionStorage.getItem('audio_oldv')
-      // console.log(this.audio_oldv);
+      this.audio_oldv = sessionStorage.getItem('audio_oldv')
       this.audio.currentTime = 0;
-      //  this.timeout = Math.floor((newv / 1000 / 100) * 1000);
     },
     //监听歌曲时间的更新
     "$store.state.song_time"(newv, oldv) {
+      this.flag=true
       this.timeout = Math.floor((newv / 1000 / 100) * 1000);
-      this.play_pause();
+      this.play_audio()
     },
   },
 };
@@ -420,8 +461,7 @@ export default {
 
 <style  lang="less">
 .audio {
-  //   opacity: 0.99;
-
+  z-index: 1;
   width: 100%;
   min-width: 1100px;
   display: flex;

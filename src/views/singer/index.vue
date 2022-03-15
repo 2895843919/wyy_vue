@@ -30,9 +30,9 @@
         </div>
       </div>
     </div>
-    <div class="right">
+    <div class="right" v-loading="loading">
       <div class="hotRecommend">
-        <div class="hotRecommend_head">
+        <div class="hotRecommend_head" v-show="!loading">
           <span class="headLine">入驻歌手</span>
         </div>
         <!-- 100位热门歌手前20名 -->
@@ -59,11 +59,11 @@
           </ul>
         </div>
 
-        <div class="hotRecommend_head">
+        <div class="hotRecommend_head" v-show="!loading">
           <span class="headLine">热门推荐</span>
         </div>
 
-        <div class="hotRecommend_list" v-loading="loading">
+        <div class="hotRecommend_list">
           <ul v-for="item in singer_list.slice(0, 10)" :key="item.id">
             <li>
               <div class="list_li">
@@ -88,7 +88,7 @@
 
         <!--100喂热门歌手后80位名字 -->
         <div class="hotRecommend_list_name">
-          <ul v-for="(item,index) in singer_list" :key="index">
+          <ul v-for="(item, index) in singer_list" :key="index">
             <li>
               <span
                 style="cursor: pointer"
@@ -110,6 +110,7 @@
 import { Artist_list } from "../../utils/request.js";
 
 export default {
+  name: "singer",
   data() {
     return {
       singer_list: [], //热门歌手
@@ -136,20 +137,31 @@ export default {
           area: 16,
         },
       ], //推荐，欧美等类型
-      loading:true
+      loading: true,
     };
   },
-  async mounted() {
+  async created() {
+    console.log("singer");
     await Artist_list({}).then((res) => {
       res.artists.forEach((item) => {
         item.picUrl = item.picUrl + "?param=130y130";
-       
       });
       this.singer_list = res.artists;
-      if(this.singer_list.length){
-        this.loading=!this.loading
+      if (this.singer_list.length) {
+        this.loading = !this.loading;
       }
     });
+  },
+  async mounted() {
+    // await Artist_list({}).then((res) => {
+    //   res.artists.forEach((item) => {
+    //     item.picUrl = item.picUrl + "?param=130y130";
+    //   });
+    //   this.singer_list = res.artists;
+    //   if(this.singer_list.length){
+    //     this.loading=!this.loading
+    //   }
+    // });
   },
   methods: {
     // 跳转到item

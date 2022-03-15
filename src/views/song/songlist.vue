@@ -1,18 +1,13 @@
 <template>
 
-  <!-- <div class="main"> -->
-    <el-mian>
-  songlist
-    </el-mian>
+  <div class="main">
+  </div>
 
-  <!-- </div> -->
 </template>
 
 <script>
 export default {
-    created () {
-        console.log('songlist');
-    }
+
 
 }
 </script>

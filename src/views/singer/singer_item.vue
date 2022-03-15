@@ -1,18 +1,19 @@
 <template>
   <!-- {{$route.query.id}} -->
   <div class="container">
-    <div class="left" style="display:flex;flex-direction:column;padding:10px">
+    <div
+      class="left"
+      style="display: flex; flex-direction: column; padding: 10px"
+    >
       <!-- 歌手信息 -->
-      <div style="display:flex;flex-direction:column;">
+      <div style="display: flex; flex-direction: column">
         <!-- 歌手名字  -->
         <div style="width: 100%; height: 100%">
           <span style="font-size: 26px">{{ $route.query.name }}</span>
-          <span style="padding: 0px 12px; color: #ccc">{{
-            $route.query.nick
-          }}</span>
+          <span style="padding: 0px 12px; color: #ccc">{{ $route.query.nick}}</span>
         </div>
         <!-- 图片 -->
-        <div style="width:100%;posit " >
+        <div style="width:100%;posit ">
           <img
             style="width: 100%; height: 100%; padding-top: 10px"
             :src="$route.query.img"
@@ -37,7 +38,7 @@
           <!-- 播放 -->
           <el-table-column type="" width="45" height="30">
             <!-- <tamplate> -->
-            <tamplate>
+            <!-- <tamplate>
               <el-icon
                 style="width: 25px; height: 40px; cursor: pointer"
                 class="icon"
@@ -46,6 +47,21 @@
                 <VideoPlay
                   style="width: 100%; height: 100%; vertical-align: middle"
                 ></VideoPlay>
+              </el-icon>
+            </tamplate> -->
+            <tamplate>
+              <el-icon
+                style="
+                  width: 25px;
+                  height: 40px;
+                  cursor: pointer;
+                  opacity: 0.5;
+                  transform: translateY(2px);
+                "
+                class="icon"
+                @click="Song_detail(playlist_tracks)"
+              >
+                <video_play style="width: 100%; height: 100%"></video_play>
               </el-icon>
             </tamplate>
           </el-table-column>
@@ -81,17 +97,15 @@
         <!-- {{item.name}} -->
       </div>
     </div>
-    <div class="right" style="display:flex;flex-direction:column;padding:20px 10px">
-      <div style="padding: 10px 10px;border-bottom: 1px dotted #ccc;" >相似歌手</div>
+    <div
+      class="right"
+      style="display: flex; flex-direction: column; padding: 20px 10px"
+    >
+      <div style="padding: 10px 10px; border-bottom: 1px dotted #ccc">
+        相似歌手
+      </div>
 
-      <div
-        style="
-        
-          display: flex;
-          flex-direction: row;
-          flex-flow: wrap;
-        "
-      >
+      <div style="display: flex; flex-direction: row; flex-flow: wrap">
         <div
           v-for="(item, index) in simi_list"
           :key="index"
@@ -139,6 +153,7 @@ import {
   artists,
   simi_artist,
 } from "../../utils/request.js";
+import { VideoPlay } from "@element-plus/icons";
 export default {
   data() {
     return {
@@ -154,7 +169,7 @@ export default {
     };
   },
   async created() {
-    window.scrollTo(0,0)
+    window.scrollTo(0, 0);
     this.id = this.$route.query.id;
     this.head_img = this.$route.query.img;
 
@@ -183,7 +198,6 @@ export default {
     Song_detail(playlist_tracks) {
       setTimeout(() => {
         // 获取歌曲url
-        //  console.log(playlist_tracks[this.currentRowIndex].privilege.id);
         song_url({
           id: playlist_tracks[this.currentRowIndex].privilege.id,
         }).then((res) => {
@@ -221,7 +235,7 @@ export default {
         this.simi_list.forEach((item) => {
           item.picUrl = item.picUrl + "?param=50y50";
         });
-        console.log(this.simi_list);
+        // console.log(this.simi_list);
       });
     },
     // 跳转到item
@@ -237,6 +251,9 @@ export default {
         },
       });
     },
+  },
+  components: {
+    video_play: VideoPlay,
   },
 
   watch: {

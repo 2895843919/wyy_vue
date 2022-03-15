@@ -205,19 +205,21 @@ export default {
     top_album_list(id) {
       top_album_list({ id })
         .then((res) => {
-            console.log(res);
+            // console.log(res);
           this.playlist_msg = res.album;
           this.playlist_img = res.album.picUrl;
-          this.playlist_tracks = res.songs;       
+          // 歌曲列表 data
+          this.playlist_tracks = res.songs;  
+ 
           this.$store.commit('saveSong_list',this.playlist_tracks)
           this.playlist_title = res.album.name;        
           this.description = res.album.description;
+
           this.commentCount = res.album.info.commentCount;
-          // console.log(this.commentCount);
-          this.Comment_playlist(this.id);
           this.playlist_tracks.forEach((item) => {
             item.dt = dt_data(item.dt);
           });
+        
         })
         .catch((err) => {
           console.log(err);
@@ -236,7 +238,7 @@ export default {
         song_detail({
           ids: playlist_tracks[this.currentRowIndex].id,
         }).then((res) => {
-            console.log(res);
+            // console.log(res);
           this.$store.commit("saveSong_img", res.songs[0].al.picUrl);
           this.$store.commit("saveSong_name", res.songs[0].name);
           this.$store.commit("saveSong_singer", res.songs[0].ar[0].name);
@@ -259,14 +261,12 @@ export default {
     // 获取歌单评论
     Comment_album(id) { 
       Comment_album({ id }).then((res) => {
-          console.log(res);
         this.page.tableData = res.comments;    
         this.comments = res.comments;
         this.page.show_comment = this.comments.slice(
           this.page.pre,
           this.page.pre + 20
         );
-        console.log(this.page.show_comment);
       });
     },
 
@@ -285,11 +285,6 @@ export default {
   },
 
   watch: {
-    // "$route.query.id"(){
-    //   this.id=this.$route.query.id  
-    //  this.top_album_list(this.id);
-    // }
-
   },
 };
 </script>

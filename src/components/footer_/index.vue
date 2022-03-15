@@ -23,9 +23,6 @@ export default {
     const add=()=>{
       ctx.emit('add',1)
     }
-
-    
- 
     return {
       add
     };

@@ -14,16 +14,15 @@
           </el-table-column>
           <!-- 播放 -->
           <el-table-column type="" width="45" height="30">
-            <!-- <tamplate> -->
-            <!-- <tamplate> -->
+            <tamplate>
               <el-icon
                 style="width: 25px; height: 40px; cursor: pointer"
                 class="icon"
                 @click="Song_detail(playlist_tracks)"
               >
-                <VideoPlay style="width: 100%; height: 100%;vertical-align: middle"></VideoPlay>
+                <video_play style="width: 100%; height: 100%"></video_play>
               </el-icon>
-            <!-- </tamplate> -->
+            </tamplate>
           </el-table-column>
 
           <el-table-column
@@ -61,6 +60,9 @@
     </div>
   </div>
 </template>
+<script setup>
+import { Edit } from "@element-plus/icons";
+</script>
 
 <script>
 import { search, song_url, dt_data, song_detail } from "../../utils/request.js";
@@ -82,14 +84,10 @@ export default {
     this.s = this.$route.query.s;
     await this.Search(this.s);
   },
-  components: {
-    video: VideoPlay,
-  },
 
   methods: {
     Search(s) {
       search({ keywords: s, type: this.type }).then((res) => {
-
         this.playlist_msg = res;
         this.playlist_tracks = res.result.songs;
         console.log(this.playlist_tracks);
@@ -113,7 +111,6 @@ export default {
         song_detail({
           ids: playlist_tracks[this.currentRowIndex].id,
         }).then((res) => {
-          // console.log(res);
           this.$store.commit("saveSong_img", res.songs[0].al.picUrl);
           this.$store.commit("saveSong_name", res.songs[0].name);
           this.$store.commit("saveSong_singer", res.songs[0].ar[0].name);
@@ -133,27 +130,32 @@ export default {
     },
   },
   components: {
+    video_play: VideoPlay,
     footer_,
   },
   watch: {
     // 在所有页搜索更新搜索页
-    "$route.query.s"(newv,oldv){
-      // console.log(newv);
-        search({ keywords: newv, type: this.type }).then((res) => {
-        // console.log(res);
+    "$route.query.s"(newv, oldv) {
+      search({ keywords: newv, type: this.type }).then((res) => {
         this.playlist_msg = res;
         this.playlist_tracks = res.result.songs;
-        console.log(this.playlist_tracks);
+        // console.log(this.playlist_tracks);
         this.$store.commit("saveSong_list", this.playlist_tracks);
 
         this.playlist_tracks.forEach((item) => {
           item.duration = dt_data(item.duration);
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.icon {
+  display: flex;
+  color: darkgrey;
+  // background-color: red;
+  // color: darkgrey;
+}
 </style>

@@ -182,7 +182,7 @@ export default {
         cookie: this.$store.state.login_cookie,
       })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           this.playlist_msg = res;
           this.playlist_img = res.playlist.coverImgUrl + "?param=130y130";
           // 获取歌单信息
@@ -207,7 +207,7 @@ export default {
     },
     // el-collapse函数
     handleChange(val) {
-      console.log(val);
+      // console.log(val);
     },
     // 获取用户歌单
     User_playlist(id) {
@@ -255,7 +255,6 @@ export default {
   mounted() {},
   watch: {
     "$store.state.account_id"(newv, oldv) {
-      // console.log(newv,oldv);
       if (newv) {
         this.User_playlist(this.$store.state.account_id);
       }

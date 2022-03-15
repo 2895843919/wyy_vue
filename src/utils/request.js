@@ -1,7 +1,6 @@
 // 引入封装的axios
 import axios from './axios.js'
 // const Cookie=this.$store.state.login_cookie
-
 // 登录
 export function login(params) {
     return axios.get(`/login/cellphone`, {
@@ -103,7 +102,6 @@ export function playlist_hightquality(params) {
 export function playlist_catlist() {
     return axios.get(`/playlist/catlist`, {})
 }
-
 //  格式化歌曲时间
 export function dt_data(t) {
     let n = t / 1000;
@@ -115,7 +113,6 @@ export function dt_data(t) {
             Math.floor(n % 60));
     return number;
 }
-
 //   获取用户歌单
 export function user_playlist(id) {
     return axios.get(`/user/playlist`, {
@@ -124,7 +121,6 @@ export function user_playlist(id) {
         }
     })
 }
-
 // 个性化推荐  个性化推荐的后3个歌单
 // 相关歌单推荐
 export function recommend_resource(params) {
@@ -134,7 +130,6 @@ export function recommend_resource(params) {
         }
     })
 }
-
 //获取每日推荐歌曲  个性化推荐的第一个歌单
 // 接口地址 : /recommend/songs
 // 说明 : 调用此接口 , 可获得每日推荐歌曲 ( 需要登录 )
@@ -145,7 +140,6 @@ export function recommend_songs(params) {
         }
     })
 }
-
 //获取音乐 url
 export function song_url(params) {
     return axios.get(`/song/url`, {
@@ -154,7 +148,6 @@ export function song_url(params) {
         }
     })
 }
-
 //搜索
 export function search(params) {
     return axios.get(`/search`, {

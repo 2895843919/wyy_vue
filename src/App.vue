@@ -21,8 +21,14 @@
     </el-footer>
 
     <audio_ class="audio_"></audio_>
+
   </el-container>
 </template>
+
+<script setup>
+import { Edit,VideoPlay} from '@element-plus/icons'
+
+</script>
 
 <script>
 import header_ from "./components/header_/index.vue";
@@ -30,30 +36,21 @@ import footer_ from "./components/footer_/index.vue";
 import audio_ from "./components/audio/index.vue";
 
 import { top_album, album_new, album_new_offset } from "./utils/request.js";
-import { ref, reactive, toRefs } from "vue";
+
+
 export default {
   components: {
     header_,
     footer_,
     audio_,
   },
-  computed: {
-    includedComponents() {
-      return this.$route.meta.keepAlive;
-    },
-  },
 
-  setup() {
-    const count = ref(10);
-    const add = (n) => {
-      count.value += n;
-    };
+mounted () {
+  // console.log(this.$store.state.login_cookie);
+},
+  methods: {
 
-    return {
-      count,
-      add,
-    };
-  },
+  }
 };
 </script>
 
@@ -87,6 +84,7 @@ export default {
 
     border-right: 1px solid #dddddd;
     border-left: 1px solid #dddddd;
+     border-collapse: collapse;
   }
   .el-aside {
     border-right: 1px solid #dddddd;
@@ -95,6 +93,16 @@ export default {
   .el-footer {
     width: 100%;
     flex: 1;
+  }
+  .el-footer {
+    box-sizing: border-box;
+    display: flex;
+    border-top: 1px solid #ccc;
+    border-collapse: collapse;
+    // margin-top: 4px;
+    // position: fixed;bottom: 0;width:100%;
+    // position:absolute;bottom:0;
+    justify-content: center;
   }
   .mni_active {
     background-color: black;

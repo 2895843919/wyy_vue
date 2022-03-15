@@ -3,7 +3,7 @@
     <!-- 歌单信息  图片，标题 标签 -->
     <div class="head">
       <div class="img" v-cloak>
-        <img :src="playlist_img" />
+        <img :src="playlist_img" ref="head_img" @error="imgError()" />
       </div>
       <div class="inform">
         <!-- 歌单 歌单名 -->
@@ -57,17 +57,14 @@
           </el-table-column>
           <!-- 播放 -->
           <el-table-column type="" width="45" height="30">
-            <!-- <tamplate> -->
+
             <tamplate>
               <el-icon
                 style="width: 25px; height: 40px; cursor: pointer"
                 class="icon"
                 @click="Song_detail(playlist_msg)"
-              >
-                <VideoPlay
-                  style="width: 100%; height: 100%; vertical-align: middle"
-                ></VideoPlay>
-                <!-- <video_play style="width: 100%; height: 100%"></video_play> -->
+              >            
+                <video_play style="width: 100%; height: 100%"></video_play>
               </el-icon>
             </tamplate>
           </el-table-column>
@@ -163,6 +160,10 @@
   <div class="aside"></div>
 </template>
 
+<script setup>
+import { Edit } from '@element-plus/icons'
+</script>
+
 <script>
 import {
   playlist_detail,
@@ -173,6 +174,8 @@ import {
   song_url,
 } from "../../utils/request.js";
 import { VideoPlay } from "@element-plus/icons";
+
+import loadingImg from "../../static/imgs/默认图片.png";
 
 export default {
   // props: ["id"],
@@ -200,13 +203,13 @@ export default {
       },
       currentRowIndex: "", //el-table索引
       id: "", //All传过来的id
+
+      default: loadingImg,
     };
   },
   async created() {
     window.scrollTo(0, 0);
     this.id = this.$route.query.id;
-    console.log(this.id);
-
     await this.Playlist_detail(this.id);
   },
   mounted() {
@@ -220,18 +223,19 @@ export default {
     video_play: VideoPlay,
   },
   methods: {
+    //默认图片
+    imgError() {
+      this.$refs.head_img.src = this.default;
+      this.$refs.head_img.onerror = null; //防止闪
+    },
     // 歌单详情
     Playlist_detail(id) {
-      // console.log('1');
       playlist_detail({ id })
         .then((res) => {
-          console.log(res);
           res.playlist.coverImgUrl =
             res.playlist.coverImgUrl + "?param=150y150";
           this.playlist_msg = res;
-          // this.playlist_img = res.playlist.coverImgUrl+"?param=150y150";
           this.playlist_img = res.playlist.coverImgUrl;
-          console.log(this.playlist_img);
           this.playlist_tracks = res.playlist.tracks;
           this.$store.commit("saveSong_list", this.playlist_tracks);
           this.playlist_title = res.playlist.name;
@@ -302,6 +306,7 @@ export default {
     // },
     //
     handleCurrentChange(val) {
+      window.scrollTo(0, 800);
       this.page.currentPage = val;
       this.page.pre = 20 * (val - 1);
       this.page.show_comment = this.comments.slice(
@@ -311,7 +316,6 @@ export default {
     },
     handleSizeChange(val) {
       this.page.pagesize = val;
-      // console.log(this.pagesize);
     },
     // 页面滚动事件
     handleScroll() {
@@ -421,6 +425,7 @@ export default {
         .icon {
           display: flex;
           color: darkgrey;
+          // background-color: red;
         }
       }
     }

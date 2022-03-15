@@ -1,214 +1,35 @@
 // 发现音乐的推荐页面/推荐首页
 <template>
-  <!-- <div>推荐</div> -->
-  <div
-    class="top_banner"
-    :style="{
-      'background-image': `url(${banner_background[activeIndex]})`,
-      'background-size': '30000px',
-      'background-position': 'top top',
-    }"
-  >
-    <!-- banner -->
-    <div class="banner" ref="banner_back_ref">
-      <el-carousel
-        trigger="click"
-        :autoplay="false"
-        arrow="always"
-        @change="carousel_change()"
-        ref="carousel"
-      >
-        <el-carousel-item
-          style="width: 100%; height: 350px"
-          v-for="(item, index) in banners"
-          :key="index"
-        >
-          <img style="width: 100%; height: 100%" :src="item.imageUrl" />
-        </el-carousel-item>
-      </el-carousel>
-    </div>
-  </div>
+  <!-- Banner -->
+  <banner-div></banner-div>
   <!-- 热门推荐 新碟 榜单 -->
   <div class="container">
     <div class="left">
       <!-- 热门推荐 -->
-      <div class="hotRecommend">
-        <div class="hotRecommend_head">
-          <div style="width: 16px; height: 16px">
-            <img
-              style="width: 100%; height: 100%"
-              src="../../static/imgs/圆圈.png"
-              alt=""
-            />
-          </div>
-          <span class="headLine" @click="go_playlist_all('')">热门推荐</span>
-          <span @click="go_playlist_all('华语')">华语</span>
-          <el-divider direction="vertical"></el-divider>
-          <span @click="go_playlist_all('流行')">流行</span>
-          <el-divider direction="vertical"></el-divider>
-          <span @click="go_playlist_all('摇滚')">摇滚</span>
-          <el-divider direction="vertical"></el-divider>
-          <span @click="go_playlist_all('民谣')">民谣</span>
-          <el-divider direction="vertical"></el-divider>
-          <span @click="go_playlist_all('电子')">电子</span>
-          <span class="more" @click="go_playlist_all()">更多</span>
-        </div>
+      <hotRecommend
+        :click_audioPlay="click_audioPlay"
+        :go_playlist="go_playlist"
+        :go_playlist_all="go_playlist_all"
+        :filter_playCount="filter_playCount"
+      ></hotRecommend>
 
-        <div class="hotRecommend_list">
-          <ul v-for="item in recommendSongsList" :key="item.id">
-            <li>
-              <div class="list_li">
-                <img
-                  @click="go_playlist(item.id)"
-                  :src="item.picUrl"
-                  style="width: 100%; height: 100%"
-                  alt=""
-                />
-                <div class="buttom">
-                  <img
-                    style="width: 20px; height: 20px; padding: 10px"
-                    src="../../static/imgs/耳机.png"
-                    alt=""
-                  />
-                  <span style="color: #ccc; font: 20px '隶书'">{{
-                    filter_playCount(item.playCount)
-                  }}</span>
-                  <img
-                  @click="click_audioPlay(item.id)"
-                    class="icon_play"
-                    style="width: 26px; height: 26px"
-                    src="../../static/imgs/播放.png"
-                    alt=""
-                  />
-                </div>
-              </div>
-              <span>{{ item.name }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
       <!-- 个性化推荐 -->
-      <div class="hotRecommend">
-        <div class="hotRecommend_head">
-          <div style="width: 16px; height: 16px">
-            <img
-              style="width: 100%; height: 100%"
-              src="../../static/imgs/圆圈.png"
-              alt=""
-            />
-          </div>
-          <span class="headLine">个性化推荐</span>
-        </div>
-        <div class="hotRecommend_list">
-          <li @click="go_taste()">
-            <div class="list_li">
-              <div class="calendar">
-                <div class="week">星期{{ new Date().getDay() }}</div>
-                <div class="day">{{ new Date().getDate() }}</div>
-              </div>
-            </div>
-            <span>每日歌单推荐</span>
-          </li>
+      <selfStyle
+        :click_audioPlay="click_audioPlay"
+        :go_taste="go_taste"
+        :go_playlist="go_playlist"
+        :filter_playCount="filter_playCount"
+      >
+      </selfStyle>
 
-          <ul v-for="item in selfStyleList" :key="item.id">
-            <li>
-              <div class="list_li">
-                <img
-                  @click="go_playlist(item.id)"
-                  :src="item.picUrl"
-                  style="width: 100%; height: 100%"
-                  alt=""
-                />
-                <div class="buttom">
-                  <img
-                    style="width: 20px; height: 20px; padding: 10px"
-                    src="../../static/imgs/耳机.png"
-                    alt=""
-                  />
-                  <span style="color: #ccc; font: 20px '隶书'">{{
-                    filter_playCount(item.playcount)
-                  }}</span>
-                  <img
-                  @click="click_audioPlay()"
-                    class="icon_play"
-                    style="width: 26px; height: 26px"
-                    src="../../static/imgs/播放.png"
-                    alt=""
-                  />
-                </div>
-              </div>
-              <span>{{ item.name }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
       <!-- 新碟上架 -->
-      <div class="hotRecommend">
-        <div class="hotRecommend_head">
-          <div style="width: 16px; height: 16px">
-            <img
-              @click="go_album_item(item.id)"
-              style="width: 100%; height: 100%"
-              src="../../static/imgs/圆圈.png"
-              alt=""
-            />
-          </div>
-          <span class="headLine">新碟上架</span>
-          <span class="more" @click="go_album()">更多</span>
-        </div>
-
-        <div style="padding: 20px">
-          <div
-            style="
-              display: flex;
-              flex-direction: row;
-              flex-wrap: wrap;
-              border: 1px solid #ddd;
-              justify-content: center;
-            "
-          >
-            <ul v-for="item in weekData" :key="item.id">
-              <li style="margin: 10px 15px">
-                <div class="list_li" style="width: 120px; height: 120px">
-                  <img
-                    @click="go_album_item(item.id)"
-                    :src="item.picUrl"
-                    style="width: 100%; height: 100%"
-                    alt=""
-                  />
-                </div>
-                <p
-                  style="
-                    width: 100px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    padding: 5px 0px;
-                  "
-                >
-                  {{ item.name }}
-                </p>
-                <p
-                  style="
-                    width: 100px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    color: #666666;
-                    font-size: 12px;
-                  "
-                >
-                  {{ item.artists[0].name }}
-                </p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <album :go_album_item="go_album_item" :go_album="go_album"></album>
     </div>
 
+    <!-- asideRight -->
+    <!-- <aside :go_singer_item="go_singer_item"></aside> -->
+
     <div class="right">
-      <!-- 账户信息 -->
       <div class="right_top" v-if="$store.state.account_id">
         <div style="padding: 10px; display: flex">
           <div style="width: 90px; height: 90px; border: 1px solid #ccc">
@@ -221,6 +42,7 @@
           <div style="padding-left: 20px">
             <p>{{ $store.state.account_nickname }}</p>
             <p
+            v-if="$store.state.account_lever"
               style="
                 padding-top: 5px;
                 color: #999999;
@@ -230,7 +52,7 @@
                 border: 1px solid #ccc;
               "
             >
-              lv.{{ $store.state.account_lever }}
+         <span >  lv.{{ $store.state.account_lever }}</span>    
             </p>
           </div>
 
@@ -241,37 +63,41 @@
       <div class="right_top" v-else>未登录</div>
 
       <div class="right_main">
-        <!-- 入驻歌手 -->
-        <div class="hotRecommend">
+
+        <div class="hotRecommend" style="margin: 5px 10px">
           <div class="hotRecommend_head">
-            <span >入驻歌手</span>
-            <span >查看全部</span>
+            <span>入驻歌手</span>
+            <span
+              @click="$router.push('/discover/singer')"
+              style="cursor: pointer"
+              >查看全部</span
+            >
           </div>
-          <!-- 100位热门歌手前20名 -->
+      
           <div class="hotRecommend_list" v-loading="loading">
             <ul v-for="item in singer_list.slice(0, 10)" :key="item.id">
-              <li    @click="
-                      go_singer_item(
-                        item.id,
-                        item.name,
-                        item.alias[0],
-                        item.picUrl
-                      )
-                    ">
+              <li
+                @click="
+                  go_singer_item(item.id, item.name, item.alias[0], item.picUrl)
+                "
+              >
                 <div class="list_li">
                   <div class="img">
-                       <img
-                 
-                    :src="item.picUrl"
-                    style="width: 100%; height: 100%"
-                    alt=""
-                  />
+                    <img
+                      :src="item.picUrl"
+                      style="width: 100%; height: 100%"
+                      alt=""
+                    />
                   </div>
-               
-                  <div class="information"> 
-                    <p style="font-size:14px;color:#333333">{{ item.name }}</p>
-                   <p style="font-size:12px;color:#666666">{{ item.alias[0] }}</p></div>
-                 
+
+                  <div class="information">
+                    <p style="font-size: 14px; color: #333333">
+                      {{ item.name }}
+                    </p>
+                    <p style="font-size: 12px; color: #666666">
+                      {{ item.alias[0] }}
+                    </p>
+                  </div>
                 </div>
               </li>
             </ul>
@@ -279,6 +105,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -295,9 +122,14 @@ import {
   playlist_detail,
   dt_data,
   song_url,
-  
-} from "../../utils/request.js";
+  album_new,
+} from "@/utils/request.js";
 
+import selfStyle from "./selfStyle/index.vue";
+import hotRecommend from "./hotRecommend/hotRecommend.vue";
+import album from "./album/album.vue";
+import bannerDiv from "./banner/bannerDiv.vue";
+import aside from './asideRight/aside.vue'
 export default {
   name: "recommend",
   data() {
@@ -312,23 +144,31 @@ export default {
       banner_background: [],
       banner_back: "",
       activeIndex: 0, //轮播图索引
-      recommendSongsList: [], //推荐歌单
-      selfStyleList: [], //个性化推荐
-      weekData: [], //最新上架album
+      // recommendSongsList: [], //推荐歌单
+      // selfStyleList: [], //个性化推荐
+      // weekData: [], //最新上架album
       singer_list: [], //热门歌手
-      
+
       loading: true,
-      playlist_msg: [], //歌单所有信息
-      playlist_tracks: [], //每首歌信息
-     
+      // playlist_msg: [], //歌单所有信息
+      // playlist_tracks: [], //每首歌信息
+ 
     };
+  },
+  components: {
+    selfStyle,
+    hotRecommend,
+    album,
+    bannerDiv,
+    aside
   },
 
   async created() {
-    await this.Banner();
-    await this.Top_album();
-    await this.Recommend_songs_list();
-    await this.Recommend();
+    // await this.Banner();
+    // await this.Top_album();
+    // await this.Album_new();
+    // await this.Recommend_songs_list();
+    // await this.Recommend();
   },
   async mounted() {
     await Artist_list({}).then((res) => {
@@ -343,25 +183,25 @@ export default {
   },
   methods: {
     // 获取轮播图即titleColor
-    Banner() {
-      banner()
-        .then((res) => {
-          this.banners = res.banners;
-          this.banners.forEach((item) => {
-            this.banner_background.push(
-              // item.imageUrl + "?imageView&quality=89"
-              item.imageUrl
-            );
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+    // Banner() {
+    //   banner()
+    //     .then((res) => {
+    //       this.banners = res.banners;
+    //       this.banners.forEach((item) => {
+    //         this.banner_background.push(
+    //           item.imageUrl
+    //         );
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
     // 轮播图
     carousel_change() {
       this.activeIndex = this.$refs.carousel.data.activeIndex;
     },
+
     // 点击图片中aduio所执行
     click_audioPlay(id) {
       playlist_detail({ id })
@@ -369,59 +209,35 @@ export default {
           this.playlist_msg = res;
           this.playlist_tracks = res.playlist.tracks;
           //点击播放后添加audio歌单列表
-          this.$store.commit("saveSong_list", this.playlist_tracks); 
+          this.$store.commit("saveSong_list", this.playlist_tracks);
           this.playlist_tracks.forEach((item) => {
             item.dt = dt_data(item.dt);
           });
-          this.Song_detail(this.playlist_msg)
+          this.Song_detail(this.playlist_msg);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-      //歌曲详情
+    //歌曲详情
     Song_detail(playlist_msg) {
       setTimeout(() => {
         // 获取歌曲url
-        song_url({ id: playlist_msg.privileges[0].id }).then(
-          (res) => {
-            this.$store.commit("saveSong_url", res.data[0].url);
-            song_detail({
-              ids: playlist_msg.privileges[0].id,
-            }).then((res) => {
-              this.$store.commit("saveSong_img", res.songs[0].al.picUrl);
-              this.$store.commit("saveSong_name", res.songs[0].name);
-              this.$store.commit("saveSong_singer", res.songs[0].ar[0].name);
-              this.$store.commit("saveSong_dt", dt_data(res.songs[0].dt));
-              this.$store.commit("saveSong_time", res.songs[0].dt);
-            });
-          }
-        );
+        song_url({ id: playlist_msg.privileges[0].id }).then((res) => {
+          this.$store.commit("saveSong_url", res.data[0].url);
+          song_detail({
+            ids: playlist_msg.privileges[0].id,
+          }).then((res) => {
+            this.$store.commit("saveSong_img", res.songs[0].al.picUrl);
+            this.$store.commit("saveSong_name", res.songs[0].name);
+            this.$store.commit("saveSong_singer", res.songs[0].ar[0].name);
+            this.$store.commit("saveSong_dt", dt_data(res.songs[0].dt));
+            this.$store.commit("saveSong_time", res.songs[0].dt);
+          });
+        });
       }, 0);
     },
-    // 推荐歌单
-    async Recommend_songs_list() {
-      recommend_songs_list()
-        .then((res) => {
-          console.log(res);
-          res.result.forEach((item) => {
-            item.picUrl = item.picUrl + "?param=140y140";
-          });
-          this.recommendSongsList = res.result;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    //新碟上架   **月初可能会没有weekdata只有monthdata
-    async Top_album() {
-      await top_album().then((res) => {
-        this.weekData = res;
-        this.weekData.forEach((item) => {
-          item.picUrl = item.picUrl + "?param=100y100";
-        });
-      });
-    },
+
     // 跳转对应专辑页面
     go_album_item(id) {
       this.$router.push({
@@ -431,6 +247,7 @@ export default {
         },
       });
     },
+
     //more
     go_album() {
       this.$router.push({
@@ -438,14 +255,16 @@ export default {
       });
     },
     // 个性化  每日歌曲推荐+个性化推荐
-    Recommend() {
-      recommend_resource({ cookie: this.$store.state.login_cookie }).then(
-        (res) => {
-          // 选择每日歌单推荐的前3个做为个性化推荐
-          this.selfStyleList = res.recommend.splice(0, 3);
-        }
-      );
-    },
+    // Recommend() {
+    //   recommend_resource({ cookie: this.$store.state.login_cookie }).then(
+    //     (res) => {
+    //       // 选择每日歌单推荐的前3个做为个性化推荐
+    //       console.log(res);
+    //       this.selfStyleList = res.recommend.splice(0, 3);
+    //     }
+    //   );
+    // },
+
     // 跳转歌单页
     go_playlist(id) {
       this.$router.push({
@@ -470,6 +289,7 @@ export default {
         name: "taste",
       });
     },
+
     filter_playCount(value) {
       value = value + "";
       if (value > 10000) {
@@ -645,14 +465,14 @@ export default {
     }
     .hotRecommend {
       box-sizing: border-box;
-      padding:5px 10px;
-      .hotRecommend_head {        
+      padding: 5px 10px;
+      .hotRecommend_head {
         display: flex;
         justify-content: space-between;
         height: 30px;
         border-bottom: 1px solid gray;
-        span{
-          font-size:12px;
+        span {
+          font-size: 12px;
         }
         span:not(.headLine) {
           color: rgb(43, 64, 66);
@@ -680,18 +500,24 @@ export default {
             height: 100%;
             border: 1px solid rgb(224, 224, 224);
             display: flex;
+            cursor: pointer;
             .img {
-              width: 62px;
-              height: 62px;
-              cursor: pointer;
+              // width: 62px;
+              // height: 62px;
+              width: 25%;
+              height: 100%;
+              // cursor: pointer;
             }
-            .information{
+            .information {
               padding: 10px;
               display: flex;
               flex-direction: column;
               justify-content: space-between;
-              align-items: center;
+              // align-items: center;
             }
+          }
+          .list_li:hover {
+            background-color: rgb(245, 241, 241);
           }
         }
       }
